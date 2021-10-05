@@ -14,6 +14,8 @@ dependencies = [
 [[package]]
 name = "ipmiraw"
 version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8c3367ef2bfa526e9ee01d625115b60a66c1f6fc5966cb7411af27f03ce85536"
 dependencies = [
  "libc",
 ]

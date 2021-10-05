@@ -6,4 +6,4 @@ edition = "2018"
 [dependencies]
 sensors = "0.2"
 libc = "0.2"
-ipmiraw = { version = "0.2", path = "../ipmiraw-rs" }
+ipmiraw = "0.2"
