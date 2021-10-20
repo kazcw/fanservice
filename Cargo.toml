@@ -1,6 +1,6 @@
 [package]
 name = "fanservice"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2018"
 description = "Temperature-sensor based fan-speed regulator for PowerEdge servers"
 keywords = ["cli", "system", "hardware", "service", "daemon"]
