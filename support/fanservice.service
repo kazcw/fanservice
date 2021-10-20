@@ -1,0 +1,13 @@
+[Unit]
+Description=fanservice IPMI fan thermostat
+
+[Service]
+ExecStart=/usr/local/bin/fanservice run -b poweredge
+Group=users
+Restart=always
+RestartSec=10s
+RuntimeDirectory=fanservice
+RuntimeDirectoryMode=0755
+UMask=0007
+User=root
+
