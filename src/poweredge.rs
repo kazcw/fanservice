@@ -26,6 +26,7 @@ impl Backend for PowerEdge {
 
 impl Drop for PowerEdge {
     fn drop(&mut self) {
+        trace!("restoring hardware fan control");
         let result = self
             .ipmi
             .cmd(0x30, 0x30, &mut [0x01, 0x01])

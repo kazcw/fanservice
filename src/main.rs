@@ -41,6 +41,7 @@ mod protocol {
     #[derive(Serialize, Deserialize, Debug)]
     pub enum Message {
         SetGamma(f64),
+        Shutdown,
     }
 }
 

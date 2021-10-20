@@ -33,6 +33,11 @@ fn lerp(x: f64, start: f64, end: f64) -> f64 {
     }
 }
 
+enum Control {
+    CarryOn,
+    ShutDownEverything,
+}
+
 impl Daemon {
     pub fn new(sock_path: &str, backend: Box<dyn Backend>, gamma: f64) -> Result<Self> {
         let _ = fs::remove_file(sock_path);
@@ -89,7 +94,7 @@ impl Daemon {
         MIN_FAN + (sf * (1.0 - MIN_FAN))
     }
 
-    fn handle_messages(&mut self) {
+    fn handle_messages(&mut self) -> Control {
         loop {
             let r = self.sock.recv(&mut self.msg_buf);
             let n = match r {
@@ -112,8 +117,32 @@ impl Daemon {
             info!("received client message: {:?}", m);
             match m {
                 Message::SetGamma(g) => self.set_gamma(g),
+                Message::Shutdown => return Control::ShutDownEverything,
             }
         }
+        Control::CarryOn
+    }
+
+    fn register_signal_handlers(&self) -> io::Result<()> {
+        use signal_hook::consts::signal;
+
+        let killer_sock = Socket::unbound()?;
+        killer_sock.connect(&self.sock_path)?;
+        let killer_sock2 = killer_sock.try_clone()?;
+        let deadly_msg = bincode::serialize(&Message::Shutdown).unwrap();
+        let deadly_msg2 = deadly_msg.clone();
+        let deadly_fn = move || {
+            killer_sock.send(&deadly_msg).unwrap();
+        };
+        let deadly_fn2 = move || {
+            killer_sock2.send(&deadly_msg2).unwrap();
+        };
+
+        unsafe {
+            signal_hook::low_level::register(signal::SIGTERM, deadly_fn)?;
+            signal_hook::low_level::register(signal::SIGINT, deadly_fn2)?;
+        }
+        Ok(())
     }
 
     // TODO: make all the constants configurable
@@ -122,12 +151,16 @@ impl Daemon {
     pub fn run(mut self) {
         const INTERVAL_MS: u64 = 2_000;
         const SMOOTHNESS: usize = 10;
+        self.register_signal_handlers().unwrap();
         let period = std::time::Duration::from_millis(INTERVAL_MS);
         let mut worsts = vec![std::f64::MIN; SMOOTHNESS];
         let mut i = 0;
         let feats = crate::sense::get_sensors();
         loop {
-            self.handle_messages();
+            match self.handle_messages() {
+                Control::CarryOn => (),
+                Control::ShutDownEverything => break,
+            };
             worsts[i] = feats
                 .iter()
                 .map(|x| x.excess())
@@ -148,6 +181,7 @@ impl Daemon {
 
 impl Drop for Daemon {
     fn drop(&mut self) {
+        trace!("deleting socket at {:?}", &self.sock_path);
         let result = fs::remove_file(&self.sock_path);
         if let Err(e) = result {
             warn!("couldn't delete socket before exiting: {:?}", e);
