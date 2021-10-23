@@ -141,7 +141,7 @@ dependencies = [
 
 [[package]]
 name = "fanservice"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "bincode",
  "cfg-if",
@@ -193,10 +193,11 @@ checksum = "9a3a5bfb195931eeb336b2a7b4d761daec841b97f947d34394601737a7bba5e4"
 
 [[package]]
 name = "ipmiraw"
-version = "0.4.0"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fb08b60acdad53ec90e87d8bff6abaa17f1ebed6af497412f46a990de37b36a1"
+checksum = "e4cc099b5118051178314d6d3a9ca847a899af8e63aea3a7a5f5b10034fc2793"
 dependencies = [
+ "cc",
  "libc",
 ]
 

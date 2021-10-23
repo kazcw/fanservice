@@ -2,23 +2,25 @@
 
 # fanservice
 
-Daemon that regulates fan speeds based on temperature sensors. Supports Dell
-PowerEdge server hardware.
+Daemon that regulates fan speeds based on temperature sensors; speed curves can
+be tuned at runtime with a CLI tool. Supports Dell PowerEdge server hardware.
 
-## Usage
+## Installing the daemon and CLI tool
 
-### Starting the daemon
+If you use the **Nix** package manager, there's a package in [my
+overlay](https://github.com/kazcw/phoe.nix); enable the service with
+`services.fanservice.enable = true;` and add the `fanservice` package to your
+user environment.
 
-First you need to start the daemon. You can start it manually, with something like:
+**Otherwise**, you can build `fanservice` with cargo:
 ```
-sudo fanservice run -b poweredge -S /tmp/fanservice.socket
+$ cargo install fanservice
 ```
-(`fanservice` must be run as root because it needs access to IPMI.)
 
-But you'll probably want to run it as a system service. See the example
+You'll probably want to run it as a system service. See the example
 [systemd unit file](support/fanservice.service).
 
-### Controlling the daemon
+## Controlling the daemon with the CLI tool
 
 Once your daemon is running, you can send it control messages. Let's try
 turning up the quiet-factor a little:

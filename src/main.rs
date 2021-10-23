@@ -1,7 +1,7 @@
 #[cfg(feature = "ipmi")]
 use crate::poweredge::PowerEdge;
 use backend::{Backend, DryRun};
-use clap::{App, AppSettings, Arg, SubCommand};
+use clap::{crate_version, App, AppSettings, Arg, SubCommand};
 use client::Client;
 use daemon::Daemon;
 
@@ -57,7 +57,7 @@ fn main() {
 
     let args = App::new("fanservice")
         .setting(AppSettings::SubcommandRequiredElseHelp)
-        .version("0.3.0")
+        .version(crate_version!())
         .author("Kaz Wesley <fanservice@lambdaverse.org>")
         .about("Temperature-sensor based fan-speed regulator for PowerEdge servers")
         .arg(
