@@ -1,3 +1,5 @@
+[![Build Status](https://app.travis-ci.com/kazcw/jerbs.svg?branch=master)](https://app.travis-ci.com/kazcw/jerbs)
+
 # fanservice
 
 Daemon that regulates fan speeds based on temperature sensors. Supports Dell

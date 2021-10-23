@@ -1,0 +1,11 @@
+language: rust
+rust:
+  - stable
+  - beta
+  - nightly
+cache: cargo
+before_install:
+  - sudo apt-get update
+  - sudo apt-get -y install libsensors-dev
+os: linux
+dist: focal
